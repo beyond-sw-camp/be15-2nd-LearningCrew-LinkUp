@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.learningcrew.linkup.place.query.mapper.ReservationMapper">
+    <select id="selectAllReservation" parameterType="com.learningcrew.linkup.place.query.dto.request.ReserveListRequest"
+            resultType="com.learningcrew.linkup.place.query.dto.response.ReserveDto">
+        SELECT
+        r.reservation_id,
+        p.place_name,
+        s.status_type,
+        r.reservation_date,
+        r.start_time,
+        r.end_time
+        FROM reservation r
+        JOIN place p ON r.place_id = p.place_id
+        JOIN status s ON r.status_id = s.status_id
+        WHERE p.owner_id = #{ownerId}
+        <if test="statusId != null and statusId != ''">
+            AND s.status_id = #{statusId}
+        </if>
+        ORDER BY r.reservation_date DESC, r.start_time ASC
+    </select>
+
+    <!-- 전체 장소 개수 조회 쿼리 -->
+    <select id="countReserves" parameterType="com.learningcrew.linkup.place.query.dto.request.ReserveListRequest"
+            resultType="long">
+        SELECT COUNT(*)
+        FROM reservation r
+    </select>
+</mapper>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.learningcrew.linkup.report.query.mapper.BlacklistMapper">
+
+    <!-- 1. 블랙리스트 전체 조회 -->
+    <select id="selectBlacklist" resultType="com.learningcrew.linkup.report.query.dto.response.BlacklistDTO">
+        SELECT
+            b.member_id,
+            u.user_name,
+            b.reason,
+            b.created_at
+        FROM blacklist b
+        JOIN user u ON b.member_id = u.user_id
+        ORDER BY b.created_at DESC
+        LIMIT #{req.size} OFFSET #{req.offset}
+    </select>
+
+    <!-- 2. 블랙리스트 총 개수 -->
+    <select id="countBlacklist" resultType="long">
+        SELECT COUNT(*)
+        FROM blacklist
+    </select>
+
+</mapper>

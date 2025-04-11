@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.learningcrew.linkup.place.query.mapper.FavoriteMapper">
+    <select id ="selectFavorites" resultType ="FavoriteDto">
+        SELECT
+            p.place_id,
+            p.place_name,
+            p.address
+        FROM place p
+        JOIN favorite f ON (p.place_id = f.place_id)
+        JOIN member m ON ( m.member_id = f.member_id)
+        WHERE m.member_id = #{ favoriteRequest.memberId }
+    </select>
+    <select id="countFavorites" resultType="long">
+        SELECT COUNT(*)
+        FROM place p
+        JOIN favorite f ON p.place_id = f.place_id
+        JOIN member m ON m.member_id = f.member_id
+        WHERE m.member_id = #{ favoriteRequest.memberId }
+    </select>
+</mapper>

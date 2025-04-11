@@ -2,8 +2,6 @@ package com.learningcrew.linkup.meeting.command.domain.aggregate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 import lombok.*;
 
 import java.io.Serializable;

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.learningcrew.linkup.place.query.mapper.PlaceMapper">
+
+    <!-- 전체 장소 조회 쿼리 -->
+    <select id="selectAllPlaces" parameterType="com.learningcrew.linkup.place.query.dto.request.PlaceListRequest"
+            resultType="com.learningcrew.linkup.place.query.dto.response.PlaceDto">
+        SELECT
+        p.place_id AS placeId,
+        p.place_name AS placeName,
+        p.address AS address,
+        COALESCE(AVG(r.review_score), 0) AS reviewRating
+        FROM place p
+        LEFT JOIN place_review r ON p.place_id = r.place_id
+        WHERE 1 = 1
+        <if test="sportId != null">
+            AND p.sport_id = #{sportId}
+        </if>
+        <if test="address != null and address != ''">
+            AND p.address LIKE CONCAT('%', #{address}, '%')
+        </if>
+        AND p.is_active = 'Y'
+        GROUP BY p.place_id, p.place_name, p.address
+        ORDER BY p.place_id DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <!-- 전체 장소 개수 조회 쿼리 -->
+    <select id="countPlaces" parameterType="com.learningcrew.linkup.place.query.dto.request.PlaceListRequest"
+            resultType="long">
+        SELECT COUNT(*)
+        FROM place p
+        WHERE 1 = 1
+        <if test="sportId != null">
+            AND p.sport_id = #{sportId}
+        </if>
+        <if test="address != null and address != ''">
+            AND p.address LIKE CONCAT('%', #{address}, '%')
+        </if>
+        AND p.is_active = 'Y'
+    </select>
+
+    <!-- 장소 상세 조회 쿼리 -->
+    <resultMap id="placeDetailResultMap" type="com.learningcrew.linkup.place.query.dto.response.PlaceDetailResponse">
+        <id property="placeId" column="place_id"/>
+        <result property="placeName" column="place_name"/>
+        <result property="address" column="address"/>
+        <result property="description" column="description"/>
+        <result property="equipment" column="equipment"/>
+        <result property="rentalCost" column="rental_cost"/>
+        <collection property="imageUrl" ofType="java.lang.String" javaType="java.util.ArrayList">
+            <result column="image_url"/>
+        </collection>
+        <collection property="operationTimes" ofType="com.learningcrew.linkup.place.query.dto.response.OperationTimeResponse">
+            <result property="dayOfWeek"  column="day_of_week"/>
+            <result property="startTime"  column="start_time"/>
+            <result property="endTime"    column="end_time"/>
+        </collection>
+        <collection property="placeReviews" ofType="com.learningcrew.linkup.place.query.dto.response.PlaceReviewResponse">
+            <result property="reviewContent" column="review_content"/>
+            <result property="reviewImageUrl" column="review_Image_Url"/>
+            <result property="reviewScore" column="review_score"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectPlaceDetail" parameterType="int" resultMap="placeDetailResultMap">
+            SELECT
+            p.place_id,
+            p.place_name,
+            p.address,
+            p.description,
+            p.equipment,
+            p.rental_cost,
+            pi.image_url,
+            ot.day_of_week,
+            ot.start_time,
+            ot.end_time,
+            pr.review_content,
+            pr.review_image_url,
+            pr.review_score
+            FROM place p
+            LEFT JOIN place_image pi ON p.place_id = pi.place_id
+            LEFT JOIN operation_time ot ON p.place_id = ot.place_id
+            LEFT JOIN place_review pr ON p.place_id = pr.place_id
+            WHERE p.place_id = #{placeId}
+            AND (pr.status_id = 2 OR pr.status_id = 3)
+    </select>
+    <!-- 전체 장소 조회 쿼리(관리자용) -->
+    <select id="selectAllPlacesByAdmin" parameterType="com.learningcrew.linkup.place.query.dto.request.PlaceListRequest"
+            resultType="com.learningcrew.linkup.place.query.dto.response.PlaceDto">
+        SELECT
+        p.place_id AS placeId,
+        p.place_name AS placeName,
+        p.address AS address,
+        COALESCE(AVG(r.review_score), 0) AS reviewRating
+        FROM place p
+        LEFT JOIN place_review r ON p.place_id = r.place_id
+        WHERE 1 = 1
+        <if test="sportId != null">
+            AND p.sport_id = #{sportId}
+        </if>
+        <if test="address != null and address != ''">
+            AND p.address LIKE CONCAT('%', #{address}, '%')
+        </if>
+        GROUP BY p.place_id, p.place_name, p.address
+        ORDER BY p.place_id DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+    <!-- 전체 장소 개수 조회 쿼리(관리자용) -->
+    <select id="countPlacesByAdmin" parameterType="com.learningcrew.linkup.place.query.dto.request.PlaceListRequest"
+            resultType="long">
+        SELECT COUNT(*)
+        FROM place p
+        WHERE 1 = 1
+        <if test="sportId != null">
+            AND p.sport_id = #{sportId}
+        </if>
+        <if test="address != null and address != ''">
+            AND p.address LIKE CONCAT('%', #{address}, '%')
+        </if>
+    </select>
+
+</mapper>

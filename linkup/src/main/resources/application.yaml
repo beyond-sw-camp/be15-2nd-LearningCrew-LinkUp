@@ -25,10 +25,13 @@ spring:
           starttls:
             enable: true        # starttls 활성화 여부
 
+
+  main:
+    allow-bean-definition-overriding: true
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
-  mapper-locations: classpath*:mappers/**/*.xml
+  mapper-locations: classpath:/mappers/**/*.xml
   type-aliases-package: >
     com.learningcrew.linkup.linker.query.dto,
     com.learningcrew.linkup.community.query.dto,
@@ -38,6 +41,7 @@ mybatis:
     com.learningcrew.linkup.point.query.dto,
     com.learningcrew.linkup.report.query.dto,
     com.learningcrew.linkup.security
+
 
 jwt:
   secret: ${JWT_SECRET}
@@ -53,3 +57,5 @@ image:
   image-dir: ${IMAGE_DIR}
   image-url: ${IMAGE_URL}
   default-profile: ${DEFAULT_PROFILE_IMAGE}
+
+
