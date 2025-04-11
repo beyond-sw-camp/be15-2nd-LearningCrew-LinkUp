@@ -14,8 +14,9 @@ public interface MeetingParticipationMapper {
     /* 모임 ID, 회원 ID로 참가 내역 하나 조회 (status 무관) */
     MeetingParticipationDTO selectHistoryByMeetingIdAndMemberId(int meetingId, int memberId);
 
-    /* 모임 ID로 참가한 회원 조회 */
+    /* 모임 ID로 참가한 회원 목록 조회 */
     List<MemberDTO> selectParticipantsByMeetingId(int meetingId);
 
-    List<MeetingParticipationDTO> selectHistoryByMeetingIdAndStatusId(int meetingId, int statusId);
+    /* 모임 ID와 status로 참가 내역 목록 조회 */
+    List<MeetingParticipationDTO> selectHistoriesByMeetingIdAndStatusId(int meetingId, int statusId);
 }

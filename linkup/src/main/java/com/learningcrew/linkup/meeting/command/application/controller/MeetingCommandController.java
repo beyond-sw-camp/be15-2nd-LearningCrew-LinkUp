@@ -41,9 +41,6 @@ public class MeetingCommandController {
         int meetingId = meetingCommandService.createMeeting(meetingCreateRequest);
         MeetingCommandResponse response = new MeetingCommandResponse(meetingId);
 
-        MeetingParticipationCreateRequest request = new MeetingParticipationCreateRequest(meetingCreateRequest.getLeaderId(), meetingId, 2, LocalDateTime.now());
-        service.createMeetingParticipation(request);
-
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.success(response));
     }
@@ -57,13 +54,12 @@ public class MeetingCommandController {
             @PathVariable int meetingId, @PathVariable int memberId, @RequestParam int requestedMemberId
     ) {
         int leaderId = meetingQueryService.getMeeting(meetingId)
-                .getMeeting()
                 .getLeaderId();
         if (leaderId != requestedMemberId) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        List<MeetingParticipationDTO> appliers = participationQueryService.getHistories(meetingId, 1).getMeetingParticipations();
+        List<MeetingParticipationDTO> appliers = participationQueryService.getHistories(meetingId, 1);
 
         if (appliers.stream().noneMatch(applier -> applier.getMemberId() == memberId)) {
             return ResponseEntity.badRequest().body(ApiResponse.failure( "참가 신청하지 않은 회원입니다."));
@@ -88,12 +84,12 @@ public class MeetingCommandController {
     public ResponseEntity<ApiResponse<ManageParticipationResponse>> rejectParticipation(
             @PathVariable int meetingId, @PathVariable int memberId, @RequestParam int requestedMemberId
     ) {
-        int leaderId = meetingQueryService.getMeeting(meetingId).getMeeting().getLeaderId();
+        int leaderId = meetingQueryService.getMeeting(meetingId).getLeaderId();
         if (leaderId != requestedMemberId) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        List<MeetingParticipationDTO> appliers = participationQueryService.getHistories(meetingId, 1).getMeetingParticipations();
+        List<MeetingParticipationDTO> appliers = participationQueryService.getHistories(meetingId, 1);
 
         if (appliers.stream().noneMatch(applier -> applier.getMemberId() == memberId)) {
             return ResponseEntity.badRequest().body(ApiResponse.failure("참가 신청하지 않은 회원입니다."));
@@ -133,7 +129,6 @@ public class MeetingCommandController {
             @PathVariable int meetingId, @RequestParam int memberId
     ) {
         int leaderId = meetingQueryService.getMeeting(meetingId)
-                .getMeeting()
                 .getLeaderId();
 
         if (leaderId != memberId) {

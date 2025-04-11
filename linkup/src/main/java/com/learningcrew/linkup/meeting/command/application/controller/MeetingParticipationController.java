@@ -1,15 +1,21 @@
 package com.learningcrew.linkup.meeting.command.application.controller;
 
+import aj.org.objectweb.asm.commons.Remapper;
 import com.learningcrew.linkup.common.dto.ApiResponse;
+import com.learningcrew.linkup.common.query.mapper.StatusMapper;
 import com.learningcrew.linkup.meeting.command.application.dto.request.MeetingParticipationCreateRequest;
 import com.learningcrew.linkup.meeting.command.application.dto.response.MeetingParticipationCommandResponse;
 import com.learningcrew.linkup.meeting.command.application.service.MeetingParticipationCommandService;
+import com.learningcrew.linkup.meeting.command.domain.aggregate.Meeting;
 import com.learningcrew.linkup.meeting.query.dto.response.MeetingParticipationDTO;
 import com.learningcrew.linkup.meeting.query.dto.response.MemberDTO;
 import com.learningcrew.linkup.meeting.query.mapper.MeetingParticipationMapper;
 import com.learningcrew.linkup.meeting.query.service.MeetingParticipationQueryService;
+import com.learningcrew.linkup.meeting.query.service.MeetingQueryService;
+import com.learningcrew.linkup.meeting.query.service.StatusQueryService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -23,6 +29,9 @@ public class MeetingParticipationController {
     private final MeetingParticipationCommandService service;
     private final MeetingParticipationQueryService queryService;
     private final MeetingParticipationMapper participationMapper;
+    private final StatusQueryService statusQueryService;
+    private final MeetingQueryService meetingQueryService;
+    private final ModelMapper modelMapper;
 
     @Operation(
             summary = "모임 참가 신청",
@@ -33,8 +42,9 @@ public class MeetingParticipationController {
             @RequestBody @Validated MeetingParticipationCreateRequest request,
             @PathVariable int meetingId
     ) {
+        Meeting meeting = modelMapper.map(meetingQueryService.getMeeting(meetingId), Meeting.class);
 
-        long participationId = service.createMeetingParticipation(request);
+        long participationId = service.createMeetingParticipation(request, meeting);
         MeetingParticipationCommandResponse response
                 = MeetingParticipationCommandResponse
                 .builder()
@@ -54,7 +64,7 @@ public class MeetingParticipationController {
             @PathVariable int meetingId,
             @PathVariable int memberId
     ) { // 1. 참여자 확인
-        List<MemberDTO> participants = queryService.getParticipants(meetingId).getParticipants();
+        List<MemberDTO> participants = queryService.getParticipants(meetingId, statusQueryService.getStatusId("ACCEPTED"));
 
         if (!participants.stream().anyMatch(x -> x.getMemberId() == (memberId) )) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();

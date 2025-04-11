@@ -3,10 +3,8 @@ package com.learningcrew.linkup.meeting.query.service;
 import com.learningcrew.linkup.common.dto.Pagination;
 import com.learningcrew.linkup.meeting.query.dto.request.MeetingSearchRequest;
 import com.learningcrew.linkup.meeting.query.dto.response.MeetingDTO;
-import com.learningcrew.linkup.meeting.query.dto.response.MeetingDetailResponse;
 import com.learningcrew.linkup.meeting.query.dto.response.MeetingListResponse;
 import com.learningcrew.linkup.meeting.query.mapper.MeetingMapper;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,13 +19,9 @@ public class MeetingQueryService {
 
     /* 모임 상세 조회 */
     @Transactional(readOnly = true)
-    public MeetingDetailResponse getMeeting(int meetingId) {
+    public MeetingDTO getMeeting(int meetingId) {
 
-        MeetingDTO meeting = meetingMapper.selectMeetingById(meetingId);
-
-        return MeetingDetailResponse.builder()
-                .meeting(meeting)
-                .build();
+        return meetingMapper.selectMeetingById(meetingId);
     }
 
     /* 모임 목록 조회 */

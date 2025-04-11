@@ -23,7 +23,7 @@ public class ParticipantReviewCommandService {
     private final MeetingParticipationQueryService participationQueryService;
 
     public long createParticipantReview(ParticipantReviewCreateRequest request, int revieweeId, int reviewerId, int meetingId) {
-        List<Integer> participants = participationQueryService.getParticipants(meetingId).getParticipants()
+        List<Integer> participants = participationQueryService.getParticipantsByMeetingId(meetingId)
                 .stream()
                 .map(MemberDTO::getMemberId)
                 .toList();

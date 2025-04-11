@@ -2,10 +2,7 @@ package com.learningcrew.linkup.meeting.command.domain.aggregate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -14,7 +11,8 @@ import java.time.LocalDateTime;
 @Table(name = "meeting_participation_history")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Setter
+@Builder
+@AllArgsConstructor
 public class MeetingParticipationHistory {
 
     @Id
@@ -26,6 +24,7 @@ public class MeetingParticipationHistory {
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime participatedAt;
+    @Setter
     private int statusId;
 
 }

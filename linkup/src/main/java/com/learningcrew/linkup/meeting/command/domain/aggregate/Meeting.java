@@ -1,7 +1,6 @@
 package com.learningcrew.linkup.meeting.command.domain.aggregate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.learningcrew.linkup.linker.command.domain.constants.LinkerGender;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -25,7 +24,8 @@ public class Meeting {
     @Setter
     private int leaderId;
     private Integer placeId;
-    private int sportId; // tinyint: byte?
+    private int sportId;
+    @Setter
     private int statusId;
     private String meetingTitle;
     private String meetingContent;
@@ -39,7 +39,7 @@ public class Meeting {
     @Column(updatable = false)
     private LocalDateTime createdAt;
     @Enumerated(EnumType.STRING)
-    private LinkerGender gender;
+    private MeetingGender gender;
     private String ageGroup;
     private String level;
     private String customPlaceAddress;

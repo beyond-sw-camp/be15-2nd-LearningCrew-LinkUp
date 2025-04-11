@@ -9,4 +9,8 @@ import java.util.List;
 @Builder
 public class ParticipantsResponse {
     private List<MemberDTO> participants;
+
+    public static ParticipantsResponse from(List<MemberDTO> participants) {
+        return builder().participants(participants).build();
+    }
 }

@@ -2,6 +2,7 @@ package com.learningcrew.linkup.meeting.query.controller;
 
 import com.learningcrew.linkup.common.dto.ApiResponse;
 import com.learningcrew.linkup.meeting.query.dto.request.MeetingSearchRequest;
+import com.learningcrew.linkup.meeting.query.dto.response.MeetingDTO;
 import com.learningcrew.linkup.meeting.query.dto.response.MeetingDetailResponse;
 import com.learningcrew.linkup.meeting.query.dto.response.MeetingListResponse;
 import com.learningcrew.linkup.meeting.query.service.MeetingQueryService;
@@ -23,8 +24,8 @@ public class MeetingQueryController {
             description = "회원이 개설된 모임 목록에서 특정 모임의 상세 정보를 조회한다"
     )
     @GetMapping("/api/v1/meetings/{meetingId}")
-    public ResponseEntity<ApiResponse<MeetingDetailResponse>> getMeeting(@PathVariable int meetingId) {
-        MeetingDetailResponse response = meetingQueryService.getMeeting(meetingId);
+    public ResponseEntity<ApiResponse<MeetingDTO>> getMeeting(@PathVariable int meetingId) {
+        MeetingDTO response = meetingQueryService.getMeeting(meetingId);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 

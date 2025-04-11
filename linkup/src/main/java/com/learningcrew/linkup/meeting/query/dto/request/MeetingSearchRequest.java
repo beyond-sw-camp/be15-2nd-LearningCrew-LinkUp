@@ -1,6 +1,6 @@
 package com.learningcrew.linkup.meeting.query.dto.request;
 
-import com.learningcrew.linkup.linker.command.domain.constants.LinkerGender;
+import com.learningcrew.linkup.meeting.command.domain.aggregate.MeetingGender;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -17,7 +17,7 @@ public class MeetingSearchRequest {
     private Integer size = 10;
     // 지역별 ?
     @NotNull
-    private LinkerGender gender = LinkerGender.BOTH;
+    private MeetingGender gender = MeetingGender.BOTH;
     @NotNull
     @NotEmpty
     private List<String> ageGroups = Arrays.asList("10, 20, 30, 40, 50, 60, 70+".split(", "));
