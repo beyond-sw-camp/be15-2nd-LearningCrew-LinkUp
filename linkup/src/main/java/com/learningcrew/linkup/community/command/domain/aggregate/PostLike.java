@@ -17,12 +17,12 @@ public class PostLike {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int postLikeId;  // 기본 키 (자동 증가)
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id", referencedColumnName = "post_id", nullable = false)
-    private Post post;  // 게시물 (Many-to-One 관계)
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "post_id", referencedColumnName = "post_id", nullable = false)
+    private int postId;  // 게시물 (Many-to-One 관계)
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
-    private User user;  // 사용자 (Many-to-One 관계)
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
+    private int userId;  // 사용자 (Many-to-One 관계)
 
 }

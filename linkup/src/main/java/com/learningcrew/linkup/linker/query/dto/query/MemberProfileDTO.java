@@ -14,7 +14,8 @@ public class MemberProfileDTO {
     private String nickname;
     private LinkerGender gender;
     private String introduction;
-    private BigDecimal mannerTemperature;
+    private BigDecimal memberTempurature;
+//    private BigDecimal mannerTemperature;
     private LocalDate birthdate;
     private String profileImageUrl;
 }

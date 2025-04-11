@@ -32,16 +32,15 @@ mybatis:
   configuration:
     map-underscore-to-camel-case: true
   mapper-locations: classpath:/mappers/**/*.xml
-  type-aliases-package: >
-    com.learningcrew.linkup.linker.query.dto,
-    com.learningcrew.linkup.community.query.dto,
-    com.learningcrew.linkup.meeting.query.dto,
-    com.learningcrew.linkup.notification.query.dto,
-    com.learningcrew.linkup.place.query.dto,
-    com.learningcrew.linkup.point.query.dto,
-    com.learningcrew.linkup.report.query.dto,
-    com.learningcrew.linkup.security
-
+  type-aliases-package:
+    - com.learningcrew.linkup.linker.query.dto
+    - com.learningcrew.linkup.community.query.dto
+    - com.learningcrew.linkup.meeting.query.dto
+    - com.learningcrew.linkup.notification.query.dto
+    - com.learningcrew.linkup.place.query.dto
+    - com.learningcrew.linkup.point.query.dto
+    - com.learningcrew.linkup.report.query.dto
+    - com.learningcrew.linkup.security
 
 jwt:
   secret: ${JWT_SECRET}

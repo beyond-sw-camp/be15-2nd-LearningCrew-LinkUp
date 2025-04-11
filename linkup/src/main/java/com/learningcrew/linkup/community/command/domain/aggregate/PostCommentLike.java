@@ -4,6 +4,8 @@ import com.learningcrew.linkup.linker.command.domain.aggregate.User;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigInteger;
+
 @Entity
 @Table(name = "comment_like")
 @Getter
@@ -17,19 +19,19 @@ public class PostCommentLike {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int postCommentLikeId;  // 좋아요 ID (자동 증가)
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("commentId")
-    @JoinColumn(name = "comment_id", referencedColumnName = "comment_id", nullable = false)
-    private PostComment postComment;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @MapsId("commentId")
+//    @JoinColumn(name = "comment_id", referencedColumnName = "comment_id", nullable = false)
+    private long commentId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("userId")
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
-    private User user;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @MapsId("userId")
+//    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
+    private int userId;
 
-    private PostCommentLike(User user, PostComment postComment) {
-        this.user = user;
-        this.postComment = postComment;
+    private PostCommentLike(int userId, long commentId) {
+        this.userId = userId;
+        this.commentId = commentId;
     }
 
 //    public static PostCommentLike create(User user, PostComment postComment) {

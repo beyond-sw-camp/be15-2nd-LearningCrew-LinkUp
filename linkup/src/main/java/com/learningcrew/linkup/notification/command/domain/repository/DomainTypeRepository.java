@@ -4,6 +4,6 @@ import com.learningcrew.linkup.notification.command.domain.aggregate.Notificatio
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
+
 public interface DomainTypeRepository extends JpaRepository<NotificationDomainType, Integer> {
 }

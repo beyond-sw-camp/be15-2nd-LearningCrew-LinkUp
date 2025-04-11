@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-//@Repository
+
 public interface PlaceRepository extends JpaRepository<Place, Integer> {
     Place save(Place place);
     Optional<Place> findById(int placeId);

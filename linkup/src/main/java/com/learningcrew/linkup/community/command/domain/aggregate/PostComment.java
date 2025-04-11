@@ -20,15 +20,15 @@ public class PostComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_id")
-    private BigInteger postCommentId;
+    private long postCommentId; // BIGINT에 대응되는 자료형은 long
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id", referencedColumnName = "post_id", nullable = false)
-    private Post post;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "post_id", referencedColumnName = "post_id", nullable = false)
+    private int postId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
-    private User user;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
+    private int userId;
 
     @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     private String postCommentContent;
@@ -61,9 +61,9 @@ public class PostComment {
         this.postCommentContent = postCommentUpdateRequestDTO.getCommentContent();
     }
 
-    public int getPostCommentUserId() {
-        return user.getUserId();
-    }
+//    public int getPostCommentUserId() {
+//        return user.getUserId();
+//    }
 
 //    @OneToMany(mappedBy = "postComment", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)  // 댓글에 달린 좋아요
 //    private List<PostCommentLike> likes;  // 좋아요 목록

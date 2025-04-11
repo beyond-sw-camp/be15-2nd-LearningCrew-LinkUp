@@ -12,7 +12,7 @@
               , m.nickname
               , m.birth_date
               , m.introduction
-              , m.manner_temperature
+              , m.member_tempurature <!-- 일단 DDL과 일치시킴 -->
               , m.profile_image_url
           FROM member m
           JOIN user u ON (u.user_id = m.member_id)
