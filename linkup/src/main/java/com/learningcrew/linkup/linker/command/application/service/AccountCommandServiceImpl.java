@@ -1,13 +1,19 @@
 package com.learningcrew.linkup.linker.command.application.service;
 
+import com.learningcrew.linkup.common.domain.Status;
+import com.learningcrew.linkup.exception.BusinessException;
+import com.learningcrew.linkup.exception.ErrorCode;
 import com.learningcrew.linkup.linker.command.application.dto.response.RegisterResponse;
 import com.learningcrew.linkup.linker.command.domain.aggregate.Member;
 import com.learningcrew.linkup.linker.command.domain.aggregate.User;
+import com.learningcrew.linkup.linker.command.domain.constants.LinkerStatusType;
 import com.learningcrew.linkup.linker.command.domain.repository.UserRepository;
 import com.learningcrew.linkup.linker.command.application.dto.request.UserCreateRequest;
-import com.learningcrew.linkup.linker.command.domain.service.MemberDomainService;
-import com.learningcrew.linkup.linker.command.domain.service.UserDomainService;
-import com.learningcrew.linkup.linker.command.domain.service.UserValidatorService;
+import com.learningcrew.linkup.linker.command.domain.service.MemberDomainServiceImpl;
+import com.learningcrew.linkup.linker.command.domain.service.UserDomainServiceImpl;
+import com.learningcrew.linkup.linker.command.domain.service.UserValidatorServiceImpl;
+import com.learningcrew.linkup.linker.query.dto.query.UserDeleteDTO;
+import com.learningcrew.linkup.linker.query.mapper.UserMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -17,13 +23,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class UserAccountCommandService {
+public class AccountCommandServiceImpl implements AccountCommandService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
-    private final UserValidatorService userValidatorService;
-    private final UserDomainService userDomainService;
-    private final MemberDomainService memberDomainService;
+    private final UserValidatorServiceImpl userValidatorService;
+    private final UserDomainServiceImpl userDomainService;
+    private final MemberDomainServiceImpl memberDomainService;
     private final EmailService emailService;
+    private final UserMapper userMapper;
 
 
     /* 유저 생성 - 회원 가입 */
@@ -72,11 +79,29 @@ public class UserAccountCommandService {
                 .build();
     }
 
-    /* 이메일 인증 */
+    /* 회원 탈퇴 */
+    @Transactional
+    @Override
+    public void withdrawUser(String requestPassword, int userId) {
+        //유저 조회
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new BusinessException(ErrorCode.USER_NOT_FOUND)
+        );
+
+        //비밀번호 검증
+        userValidatorService.validatePassword(requestPassword, user.getPassword());
+
+        //상태를 deleted로 변경
+        userDomainService.assignStatus(user, LinkerStatusType.DELETED.name());
+
+        //회원 탈퇴 시간 삽입
+        user.setDeletedAt();
+
+        //저장
+        userRepository.save(user);
+    }
 
     /* 회원 정보 수정 - 닉네임, 휴대폰, 비밀번호 */
-
-    /* 회원 탈퇴 */
 
     /* 이메일 찾기 */
 

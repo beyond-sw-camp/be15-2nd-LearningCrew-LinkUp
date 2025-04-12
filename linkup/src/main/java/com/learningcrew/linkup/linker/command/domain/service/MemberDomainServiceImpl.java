@@ -10,7 +10,7 @@ import org.springframework.util.StringUtils;
 
 @Service
 @RequiredArgsConstructor
-public class MemberDomainService {
+public class MemberDomainServiceImpl {
     private final MemberRepository memberRepository;
     private final DefaultImageProperties defaultImageProperties;
 

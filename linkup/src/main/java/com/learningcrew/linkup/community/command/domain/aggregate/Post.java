@@ -20,31 +20,22 @@ public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "post_id")
     private int postId;
 
-    @Column(name = "user_id", nullable = false)
     private int userId;
 
-    @Column(name = "title", nullable = false, length = 30)
     private String postTitle;
 
-    @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     private String postContent;
 
-    @Column(name = "is_deleted", nullable = false, columnDefinition = "ENUM('Y','N') DEFAULT 'N'")
     private String postIsDeleted = "N";
 
-    @Column(name = "is_notice", nullable = false, columnDefinition = "ENUM('Y','N') DEFAULT 'N'")
     private String postIsNotice = "N";
 
-    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime postCreatedAt;
 
-    @Column(name = "updated_at", nullable = false)
     private LocalDateTime postUpdatedAt;
 
-    @Column(name = "deleted_at")
     private LocalDateTime postDeletedAt;
 
     @PrePersist

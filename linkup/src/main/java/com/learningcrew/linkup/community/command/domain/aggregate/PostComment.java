@@ -19,27 +19,22 @@ public class PostComment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "comment_id")
-    private long postCommentId; // BIGINT에 대응되는 자료형은 long
+    private BigInteger postCommentId;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "post_id", referencedColumnName = "post_id", nullable = false)
-    private int postId;
+    @ManyToOne
+    @JoinColumn(name = "post_id")
+    private Post post;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
-    private int userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     private String postCommentContent;
 
-    @Column(name = "is_deleted", nullable = false, columnDefinition = "ENUM('Y', 'N') DEFAULT 'N'")
     private String postCommentIsDeleted = "N";
 
-    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime postCommentCreatedAt;
 
-    @Column(name = "deleted_at")
     private LocalDateTime postCommentDeletedAt;
 
     @PrePersist
@@ -61,9 +56,9 @@ public class PostComment {
         this.postCommentContent = postCommentUpdateRequestDTO.getCommentContent();
     }
 
-//    public int getPostCommentUserId() {
-//        return user.getUserId();
-//    }
+    public int getPostCommentUserId() {
+        return user.getUserId();
+    }
 
 //    @OneToMany(mappedBy = "postComment", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)  // 댓글에 달린 좋아요
 //    private List<PostCommentLike> likes;  // 좋아요 목록

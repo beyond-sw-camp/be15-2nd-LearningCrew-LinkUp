@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class UserDomainService {
+public class UserDomainServiceImpl {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final StatusMapper statusMapper;
@@ -57,11 +57,12 @@ public class UserDomainService {
         userRepository.save(user);
     }
 
-
+    /* 이메일 유무 확인 */
     public boolean existsByUserEmail(String email) {
         return userRepository.existsByEmail(email);
     }
 
+    /* 활성화 상태 처리 */
     @Transactional
     public void activateUser(User user) {
         StatusDTO statusDTO = statusMapper.statusByStatusType(LinkerStatusType.ACCEPTED.name()).orElseThrow(

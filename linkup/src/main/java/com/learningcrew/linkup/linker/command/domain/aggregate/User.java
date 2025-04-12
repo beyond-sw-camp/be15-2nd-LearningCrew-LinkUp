@@ -56,4 +56,8 @@ public class User {
     public void setStatus(Status status) {
         this.status = status;
     }
+
+    public void setDeletedAt() {
+        this.deletedAt = LocalDateTime.now();
+    }
 }

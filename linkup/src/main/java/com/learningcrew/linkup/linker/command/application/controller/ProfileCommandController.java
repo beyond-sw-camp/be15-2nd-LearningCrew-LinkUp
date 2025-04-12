@@ -8,5 +8,4 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProfileCommandController {
     /* 프로필 수정 */
 
-    /* 매너온도 조작 */
 }

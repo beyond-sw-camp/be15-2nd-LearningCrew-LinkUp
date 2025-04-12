@@ -8,12 +8,14 @@ import com.learningcrew.linkup.linker.command.application.dto.response.TokenResp
 import com.learningcrew.linkup.linker.command.domain.aggregate.RefreshToken;
 import com.learningcrew.linkup.linker.command.domain.aggregate.User;
 import com.learningcrew.linkup.linker.command.domain.aggregate.VerificationToken;
+import com.learningcrew.linkup.linker.command.domain.constants.LinkerStatusType;
 import com.learningcrew.linkup.linker.command.domain.repository.RefreshtokenRepository;
 import com.learningcrew.linkup.linker.command.domain.repository.UserRepository;
 import com.learningcrew.linkup.linker.command.domain.repository.VerificationTokenRepository;
 import com.learningcrew.linkup.linker.command.domain.service.TokenDomainService;
-import com.learningcrew.linkup.linker.command.domain.service.UserDomainService;
-import com.learningcrew.linkup.linker.command.domain.service.UserValidatorService;
+import com.learningcrew.linkup.linker.command.domain.service.TokenDomainServiceImpl;
+import com.learningcrew.linkup.linker.command.domain.service.UserDomainServiceImpl;
+import com.learningcrew.linkup.linker.command.domain.service.UserValidatorServiceImpl;
 import com.learningcrew.linkup.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,14 +26,14 @@ import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
-public class UserAuthCommandService {
+public class AuthCommandServiceImpl implements AuthCommandService {
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshtokenRepository refreshtokenRepository;
-    private final UserValidatorService userValidatorService;
+    private final UserValidatorServiceImpl userValidatorService;
     private final TokenDomainService tokenDomainService;
     private final UserRepository userRepository;
     private final VerificationTokenRepository verificationTokenRepository;
-    private final UserDomainService userDomainService;
+    private final UserDomainServiceImpl userDomainService;
 
     /* 이메일 로직 구현 */
     @Transactional
@@ -39,6 +41,11 @@ public class UserAuthCommandService {
 
         // 이메일로 회원 조회
         User user = userValidatorService.validateEmail(request.getEmail());
+
+        // 활성화 상태 확인
+        if(!(user.getStatus().getStatusType().equals(LinkerStatusType.ACCEPTED.name()))){
+            throw new BusinessException(ErrorCode.NOT_AUTHORIZED_USER_EMAIL);
+        }
 
         // 비밀번호 확인
         userValidatorService.validatePassword(request.getPassword(), user.getPassword());
