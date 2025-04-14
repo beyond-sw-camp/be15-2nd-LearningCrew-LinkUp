@@ -16,6 +16,7 @@ public class PostCommentUpdateRequestDTO {
     private String PostCommentContent;
 
     public String getCommentContent() {
+
         return postCommentContent;
     }
 }
