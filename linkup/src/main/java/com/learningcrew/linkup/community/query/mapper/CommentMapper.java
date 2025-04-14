@@ -24,4 +24,6 @@ public interface CommentMapper {
 
     // 특정 게시글 댓글 조회 (PostDetailResponse용)
     List<CommentDTO> selectCommentsByPostId(@Param("postId") int postId);
+
+    
 }

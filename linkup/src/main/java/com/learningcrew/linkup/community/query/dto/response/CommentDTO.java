@@ -12,5 +12,6 @@ public class CommentDTO {
     private Integer postId;
     private Integer userId;
     private String content;
+    private int likeCount;
     private LocalDateTime createdAt;
 }

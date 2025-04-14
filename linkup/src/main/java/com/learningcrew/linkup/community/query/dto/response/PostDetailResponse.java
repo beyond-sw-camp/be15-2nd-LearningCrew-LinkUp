@@ -16,6 +16,7 @@ public class PostDetailResponse {
     private Integer userId;
     private String title;
     private String content;
+    private int likeCount;
     private Boolean isNotice;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

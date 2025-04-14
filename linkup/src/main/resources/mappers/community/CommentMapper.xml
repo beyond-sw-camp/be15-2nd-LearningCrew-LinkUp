@@ -54,16 +54,29 @@
     </select>
 
     <!-- 게시글 상세용 댓글 조회 -->
-    <select id="selectCommentsByPostId" resultType="com.learningcrew.linkup.community.query.dto.response.CommentDTO">
+
+    <resultMap id="CommentWithLikeResultMap" type="com.learningcrew.linkup.community.query.dto.response.CommentDTO">
+        <id property="commentId" column="comment_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="content" column="content"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="likeCount" column="like_count"/>
+    </resultMap>
+
+    <select id="selectCommentsByPostId" resultMap="CommentWithLikeResultMap">
         SELECT
-        comment_id,
-        post_id,
-        user_id,
-        content,
-        created_at
-        FROM community_comment
-        WHERE is_deleted = 'N' AND post_id = #{postId}
-        ORDER BY created_at ASC
+            c.comment_id,
+            c.user_id,
+            c.content,
+            c.created_at,
+            (
+            SELECT COUNT(*)
+            FROM comment_like cl
+            WHERE cl.comment_id = c.comment_id
+            ) AS like_count
+        FROM community_comment c
+        WHERE c.post_id = #{postId}
+        AND c.is_deleted = 'N'
     </select>
 
 </mapper>

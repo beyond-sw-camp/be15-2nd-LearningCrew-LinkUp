@@ -39,12 +39,13 @@
         </if>
     </select>
 
-    <!-- 게시글 상세 조회 (이미지 + 댓글은 이후 확장 가능) -->
+    <!-- 게시글 상세 조회 -->
     <resultMap id="PostDetailResultMap" type="com.learningcrew.linkup.community.query.dto.response.PostDetailResponse">
         <id property="postId" column="post_id"/>
         <result property="userId" column="user_id"/>
         <result property="title" column="title"/>
         <result property="content" column="content"/>
+        <result property="likeCount" column="like_count"/>
         <result property="isNotice" column="is_notice"/>
         <result property="createdAt" column="created_at"/>
         <result property="updatedAt" column="updated_at"/>
@@ -52,27 +53,22 @@
 
     <select id="selectPostDetail" resultMap="PostDetailResultMap">
         SELECT
-        post_id,
-        user_id,
-        title,
-        content,
-        is_notice,
-        created_at,
-        updated_at
-        FROM community_post
-        WHERE post_id = #{postId}
-        AND is_deleted = 'N'
-    </select>
-
-    <select id="selectCommentsByPostId" resultType="CommentDTO">
-        SELECT
-            comment_id,
-            user_id,
-            content,
-            created_at
-        FROM post_comment
-        WHERE post_id = #{postId}
-        AND is_deleted = 'N'
+            p.post_id,
+            p.user_id,
+            p.title,
+            p.content,
+            p.is_notice,
+            p.created_at,
+            p.updated_at,
+            IFNULL(pl.like_count, 0) AS like_count
+        FROM community_post p
+        LEFT JOIN (
+        SELECT post_id, COUNT(*) AS like_count
+        FROM post_like
+        GROUP BY post_id
+        ) pl ON p.post_id = pl.post_id
+        WHERE p.post_id = #{postId}
+        AND p.is_deleted = 'N'
     </select>
 
     <select id="selectPostImageUrlsByPostId" resultType="string">
