@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.learningcrew.linkup.report.query.mapper.PenaltyMapper">
+
+    <!-- 사용자 제재 내역 페이징 조회 -->
+    <select id="selectPenalties" resultType="com.learningcrew.linkup.report.query.dto.response.PenaltyDTO">
+        SELECT
+            ph.penalty_id,
+            ph.member_id,
+            u.user_name AS member_name,
+            ph.penalty_type,
+            ph.reason,
+            ph.created_at,
+            ph.expired_at,
+            ph.is_active,
+            ph.post_id,
+            ph.comment_id,
+            ph.review_id
+        FROM user_penalty_history ph
+        JOIN user u ON ph.member_id = u.user_id
+        WHERE 1 = 1
+        <if test="req.penaltyType != null and req.penaltyType != ''">
+            AND ph.penalty_type = #{req.penaltyType}
+        </if>
+        <if test="req.memberId != null">
+            AND ph.member_id = #{req.memberId}
+        </if>
+        ORDER BY ph.created_at DESC
+        LIMIT #{req.size} OFFSET #{req.offset}
+    </select>
+
+    <select id="countPenalties" resultType="long">
+        SELECT COUNT(*)
+        FROM user_penalty_history ph
+        WHERE 1 = 1
+        <if test="req.penaltyType != null and req.penaltyType != ''">
+            AND ph.penalty_type = #{req.penaltyType}
+        </if>
+        <if test="req.memberId != null">
+            AND ph.member_id = #{req.memberId}
+        </if>
+    </select>
+
+    <!-- 사용자 + 제재유형별 제재 목록 조회 -->
+    <select id="selectPenaltiesByMemberAndType" resultType="com.learningcrew.linkup.report.query.dto.response.PenaltyDTO">
+        SELECT
+            p.penalty_id,
+            p.member_id,
+            u.user_name AS member_name,
+            p.penalty_type,
+            p.reason,
+            p.post_id,
+            p.comment_id,
+            p.review_id,
+            p.created_at,
+            p.expired_at,
+            p.is_active
+        FROM user_penalty_history p
+        JOIN user u ON p.member_id = u.user_id
+        WHERE p.member_id = #{memberId}
+        AND p.penalty_type = #{penaltyType}
+        ORDER BY p.created_at DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="countPenaltiesByMemberAndType" resultType="long">
+        SELECT COUNT(*)
+        FROM user_penalty_history
+        WHERE member_id = #{memberId}
+        AND penalty_type = #{penaltyType}
+    </select>
+
+
+</mapper>

@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/PR_report.iml" filepath="$PROJECT_DIR$/.idea/PR_report.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/linkup.iml" filepath="$PROJECT_DIR$/.idea/modules/linkup.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/linkup.main.iml" filepath="$PROJECT_DIR$/.idea/modules/linkup.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/linkup.test.iml" filepath="$PROJECT_DIR$/.idea/modules/linkup.test.iml" />
     </modules>
   </component>
 </project>

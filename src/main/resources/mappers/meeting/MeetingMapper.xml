@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.learningcrew.linkup.meeting.query.mapper.MeetingMapper">
+    <select id="selectMeetingById" resultType="MeetingDTO">
+        SELECT meeting_id, leader_id, place_id, sport_id, status_id,
+        meeting_title, meeting_content, date, start_time, end_time,
+        min_user, max_user, created_at, gender, age_group,
+        level, custom_place_address, latitude, longitude
+        FROM meeting
+        WHERE meeting_id = #{ meetingId }
+        AND status_id != 4 -- DELETED
+    </select>
+
+    <select id="selectMeetings" resultType="MeetingDTO">
+        SELECT meeting_id, meeting_title
+        FROM meeting
+        WHERE gender = #{ gender }
+
+        <if test="ageGroups != null and ageGroups.size() > 0">
+            AND (
+            <foreach item="item" collection="ageGroups" separator=" OR ">
+                FIND_IN_SET(#{item}, age_group)
+            </foreach>
+            )
+        </if>
+
+        <if test="levels != null and levels.size() > 0">
+            AND (
+            <foreach item="item" collection="levels" separator=" OR ">
+                FIND_IN_SET(#{item}, level)
+            </foreach>
+            )
+        </if>
+
+        <if test="sportIds != null and sportIds.size() > 0">
+            AND sport_id IN
+            <foreach item="item" collection="sportIds" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="statusIds != null and statusIds.size() > 0">
+            AND status_id IN
+            <foreach item="item" collection="statusIds" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="minDate != null and maxDate != null">
+            AND date BETWEEN #{minDate} AND #{maxDate}
+        </if>
+
+        ORDER BY meeting_id
+        LIMIT #{ limit } OFFSET #{ offset }
+    </select>
+
+    <select id="countMeetings" resultType="long">
+        SELECT COUNT(*)
+        FROM meeting
+        WHERE gender = #{ gender }
+
+        <if test="ageGroups != null and ageGroups.size() > 0">
+            AND (
+            <foreach item="item" collection="ageGroups" separator=" OR ">
+                FIND_IN_SET(#{item}, age_group)
+            </foreach>
+            )
+        </if>
+
+        <if test="levels != null and levels.size() > 0">
+            AND (
+            <foreach item="item" collection="levels" separator=" OR ">
+                FIND_IN_SET(#{item}, level)
+            </foreach>
+            )
+        </if>
+
+        <if test="sportIds != null and sportIds.size() > 0">
+            AND sport_id IN
+            <foreach item="item" collection="sportIds" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="statusIds != null and statusIds.size() > 0">
+            AND status_id IN
+            <foreach item="item" collection="statusIds" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="minDate != null and maxDate != null">
+            AND date BETWEEN #{minDate} AND #{maxDate}
+        </if>
+    </select>
+</mapper>

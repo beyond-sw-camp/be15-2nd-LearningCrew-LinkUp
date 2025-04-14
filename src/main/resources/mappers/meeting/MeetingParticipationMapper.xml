@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.learningcrew.linkup.meeting.query.mapper.MeetingParticipationMapper">
+    <select id="selectMeetingParticipationByMeetingIdAndMemberId" resultType="MeetingParticipationDTO">
+        SELECT participation_id, status_id, meeting_id, member_id
+        FROM meeting_participation_history
+        WHERE meeting_id = #{ meetingId }
+        AND member_id = #{ memberId }
+        AND status_id = 2
+    </select>
+
+    <select id="selectParticipantsByMeetingId" resultType="MemberDTO">
+        SELECT member_id
+        FROM meeting_participation_history
+        WHERE meeting_id = #{ meetingId }
+        AND status_id = 2
+    </select>
+
+    <select id="selectHistoryByMeetingIdAndStatusId" resultType="MeetingParticipationDTO">
+        SELECT participation_id, status_id, meeting_id, member_id
+        FROM meeting_participation_history
+        WHERE meeting_id = #{ meetingId }
+        AND status_id = #{ statusId }
+    </select>
+
+    <select id="selectHistoryByMeetingIdAndMemberId" resultType="MeetingParticipationDTO">
+        SELECT participation_id, status_id, meeting_id, member_id
+        FROM meeting_participation_history
+        WHERE meeting_id = #{ meetingId }
+        AND member_id = #{ memberId }
+    </select>
+
+</mapper>
