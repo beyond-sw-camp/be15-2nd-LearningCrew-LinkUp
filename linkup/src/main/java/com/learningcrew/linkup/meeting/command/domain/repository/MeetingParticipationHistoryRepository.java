@@ -1,8 +1,6 @@
 package com.learningcrew.linkup.meeting.command.domain.repository;
 
-import com.learningcrew.linkup.linker.command.domain.aggregate.Member;
 import com.learningcrew.linkup.meeting.command.domain.aggregate.MeetingParticipationHistory;
-import com.learningcrew.linkup.meeting.query.dto.response.MeetingParticipationDTO;
 
 import java.util.List;
 

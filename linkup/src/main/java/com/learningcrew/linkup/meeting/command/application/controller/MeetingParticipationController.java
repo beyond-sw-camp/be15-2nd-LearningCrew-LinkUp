@@ -1,22 +1,14 @@
 package com.learningcrew.linkup.meeting.command.application.controller;
 
 import com.learningcrew.linkup.common.dto.ApiResponse;
-import com.learningcrew.linkup.linker.query.service.UserQueryServiceImpl;
+import com.learningcrew.linkup.linker.query.service.MeetingQueryService;
 import com.learningcrew.linkup.meeting.command.application.dto.request.MeetingParticipationCreateRequest;
 import com.learningcrew.linkup.meeting.command.application.dto.response.MeetingParticipationCommandResponse;
 import com.learningcrew.linkup.meeting.command.application.service.MeetingParticipationCommandService;
 import com.learningcrew.linkup.meeting.command.domain.aggregate.Meeting;
 import com.learningcrew.linkup.meeting.command.domain.aggregate.MeetingParticipationHistory;
 import com.learningcrew.linkup.meeting.command.domain.repository.MeetingParticipationHistoryRepository;
-import com.learningcrew.linkup.meeting.command.infrastructure.repository.JpaMeetingParticipationHistoryRepository;
-import com.learningcrew.linkup.meeting.query.dto.response.MeetingParticipationDTO;
 import com.learningcrew.linkup.meeting.query.dto.response.MemberDTO;
-import com.learningcrew.linkup.meeting.query.mapper.MeetingParticipationMapper;
-import com.learningcrew.linkup.meeting.query.service.MeetingParticipationQueryService;
-import com.learningcrew.linkup.meeting.query.service.MeetingQueryService;
-import com.learningcrew.linkup.meeting.query.service.StatusQueryService;
-import com.learningcrew.linkup.notification.command.application.dto.EventNotificationRequest;
-import com.learningcrew.linkup.notification.command.application.helper.NotificationHelper;
 import com.learningcrew.linkup.point.command.application.dto.response.MeetingPaymentResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,9 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/meetings")
@@ -37,9 +27,6 @@ import java.util.Map;
 @Tag(name = "모임 참가 관리", description = "모임 참가 신청 및 취소 API")
 public class MeetingParticipationController {
     private final MeetingParticipationCommandService service;
-    private final MeetingParticipationQueryService queryService;
-    private final MeetingParticipationMapper participationMapper;
-    private final StatusQueryService statusQueryService;
     private final MeetingQueryService meetingQueryService;
     private final ModelMapper modelMapper;
     private final MeetingParticipationHistoryRepository meetingParticipationHistoryRepository;

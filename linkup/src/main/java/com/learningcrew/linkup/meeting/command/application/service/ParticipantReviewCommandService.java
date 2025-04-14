@@ -2,17 +2,12 @@ package com.learningcrew.linkup.meeting.command.application.service;
 
 import com.learningcrew.linkup.exception.BusinessException;
 import com.learningcrew.linkup.exception.ErrorCode;
+import com.learningcrew.linkup.linker.query.service.MeetingQueryService;
 import com.learningcrew.linkup.meeting.command.application.dto.request.ParticipantReviewCreateRequest;
 import com.learningcrew.linkup.meeting.command.domain.aggregate.ParticipantReview;
 import com.learningcrew.linkup.meeting.command.domain.repository.ParticipantReviewRepository;
 import com.learningcrew.linkup.meeting.query.dto.response.MeetingDTO;
-import com.learningcrew.linkup.meeting.query.dto.response.MeetingParticipationDTO;
-import com.learningcrew.linkup.meeting.query.dto.response.MemberDTO;
 import com.learningcrew.linkup.meeting.query.dto.response.ParticipantReviewDTO;
-import com.learningcrew.linkup.meeting.query.service.MeetingParticipationQueryService;
-import com.learningcrew.linkup.meeting.query.service.MeetingQueryService;
-import com.learningcrew.linkup.meeting.query.service.ParticipantReviewQueryService;
-import com.learningcrew.linkup.meeting.query.service.StatusQueryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,10 +25,8 @@ public class ParticipantReviewCommandService {
     private static final int MAX_SCORE = 5;
 
     private final ParticipantReviewRepository repository;
-    private final MeetingParticipationQueryService participationQueryService;
     private final MeetingQueryService meetingQueryService;
-    private final ParticipantReviewQueryService participantReviewQueryService;
-    private final StatusQueryService statusQueryService;
+
 
     @Transactional
     public long createParticipantReview(ParticipantReviewCreateRequest request, int revieweeId, int reviewerId, int meetingId) {

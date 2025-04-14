@@ -1,23 +1,19 @@
 package com.learningcrew.linkup.meeting.command.application.service;
 
+import com.learningcrew.linkup.common.domain.Status;
 import com.learningcrew.linkup.common.query.mapper.StatusMapper;
 import com.learningcrew.linkup.exception.BusinessException;
 import com.learningcrew.linkup.exception.ErrorCode;
 import com.learningcrew.linkup.linker.command.domain.aggregate.User;
 import com.learningcrew.linkup.linker.command.domain.repository.MemberRepository;
 import com.learningcrew.linkup.linker.command.domain.repository.UserRepository;
+import com.learningcrew.linkup.linker.query.service.MeetingQueryService;
 import com.learningcrew.linkup.meeting.command.application.dto.request.MeetingParticipationCreateRequest;
 import com.learningcrew.linkup.meeting.command.domain.aggregate.Meeting;
 import com.learningcrew.linkup.meeting.command.domain.aggregate.MeetingParticipationHistory;
 import com.learningcrew.linkup.meeting.command.domain.repository.MeetingParticipationHistoryRepository;
-import com.learningcrew.linkup.meeting.command.infrastructure.repository.JpaMeetingParticipationHistoryRepository;
 import com.learningcrew.linkup.meeting.query.dto.response.MeetingDTO;
-import com.learningcrew.linkup.meeting.query.dto.response.MeetingParticipationDTO;
 import com.learningcrew.linkup.meeting.query.dto.response.MemberDTO;
-import com.learningcrew.linkup.meeting.query.mapper.MeetingParticipationMapper;
-import com.learningcrew.linkup.meeting.query.service.MeetingParticipationQueryService;
-import com.learningcrew.linkup.meeting.query.service.MeetingQueryService;
-import com.learningcrew.linkup.meeting.query.service.StatusQueryService;
 import com.learningcrew.linkup.notification.command.application.helper.NotificationHelper;
 import com.learningcrew.linkup.place.command.domain.aggregate.entity.Place;
 import com.learningcrew.linkup.place.query.service.PlaceQueryService;
@@ -38,13 +34,10 @@ import java.util.List;
 public class MeetingParticipationCommandService {
 
     private final MeetingParticipationHistoryRepository repository;
-    private final MeetingParticipationMapper mapper;
     private final MeetingQueryService meetingQueryService;
     private final ModelMapper modelMapper;
-    private final MeetingParticipationQueryService meetingParticipationQueryService;
-    private final StatusQueryService statusQueryService;
     private final NotificationHelper notificationHelper;
-    private final JpaMeetingParticipationHistoryRepository jpaRepository;
+    private final MeetingParticipationHistoryRepository meetingParticipationHistoryRepository;
     private final MemberRepository memberRepository;
     private final UserRepository userRepository;
     private StatusMapper statusMapper;
@@ -82,8 +75,8 @@ public class MeetingParticipationCommandService {
         LocalDateTime now = LocalDateTime.now();
 
         /* 회원이 모임에 속해 있는지 확인 */
-        List<Integer> participantsIds = jpaRepository.findByMeetingIdAndStatusId(
-                meeting.getMeetingId(), statusQueryService.getStatusId("ACCEPTED")
+        List<Integer> participantsIds = meetingParticipationHistoryRepository.findByMeetingIdAndStatusId(
+                meeting.getMeetingId(), statusMapper.statusByStatusType("ACCEPTED")
         ).stream().map(MeetingParticipationHistory::getMemberId).toList();
 
         if (participantsIds.contains(request.getMemberId())) {
@@ -134,7 +127,7 @@ public class MeetingParticipationCommandService {
     public long acceptParticipation(MeetingDTO meeting, int memberId) {
         // 1. 참가 내역 조회
         int meetingId = meeting.getMeetingId();
-        MeetingParticipationHistory participation = jpaRepository.findByMeetingIdAndMemberId(meetingId, memberId);
+        MeetingParticipationHistory participation = meetingParticipationHistoryRepository.findByMeetingIdAndMemberId(meetingId, memberId);
 
         if (participation == null || participation.getStatusId() != statusQueryService.getStatusId("PENDING") ) {
             throw new BusinessException(ErrorCode.BAD_REQUEST, "승인 가능한 참가 신청 내역이 없습니다.");
@@ -223,8 +216,7 @@ public class MeetingParticipationCommandService {
     public long rejectParticipation(MeetingDTO meeting, int memberId) {
         // 1. 참가 내역 조회
         int meetingId = meeting.getMeetingId();
-        MeetingParticipationHistory participation = jpaRepository.findByMeetingIdAndMemberId(meetingId, memberId);
-//        MeetingParticipationDTO participation = mapper.selectHistoryByMeetingIdAndMemberId(meetingId, memberId);
+        MeetingParticipationHistory participation = meetingParticipationHistoryRepository.findByMeetingIdAndMemberId(meetingId, memberId);
         if (participation == null || participation.getStatusId() != statusQueryService.getStatusId("PENDING") ) {
             throw new BusinessException(ErrorCode.BAD_REQUEST, "거절 가능한 참가 신청 내역이 없습니다.");
         }

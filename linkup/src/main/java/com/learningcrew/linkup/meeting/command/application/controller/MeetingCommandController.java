@@ -1,6 +1,9 @@
 package com.learningcrew.linkup.meeting.command.application.controller;
 
 import com.learningcrew.linkup.common.dto.ApiResponse;
+import com.learningcrew.linkup.exception.BusinessException;
+import com.learningcrew.linkup.exception.ErrorCode;
+import com.learningcrew.linkup.linker.query.service.MeetingQueryService;
 import com.learningcrew.linkup.meeting.command.application.dto.request.LeaderUpdateRequest;
 import com.learningcrew.linkup.meeting.command.application.dto.request.ManageParticipationRequest;
 import com.learningcrew.linkup.meeting.command.application.dto.request.MeetingCreateRequest;
@@ -9,8 +12,8 @@ import com.learningcrew.linkup.meeting.command.application.dto.response.ManagePa
 import com.learningcrew.linkup.meeting.command.application.dto.response.MeetingCommandResponse;
 import com.learningcrew.linkup.meeting.command.application.service.MeetingCommandService;
 import com.learningcrew.linkup.meeting.command.application.service.MeetingParticipationCommandService;
-import com.learningcrew.linkup.meeting.query.dto.response.MeetingDTO;
-import com.learningcrew.linkup.meeting.query.service.MeetingQueryService;
+import com.learningcrew.linkup.meeting.command.domain.aggregate.Meeting;
+import com.learningcrew.linkup.meeting.command.domain.repository.MeetingRepository;
 import com.learningcrew.linkup.place.command.application.dto.request.ReservationCreateRequest;
 import com.learningcrew.linkup.place.command.application.dto.response.ReservationCommandResponse;
 import com.learningcrew.linkup.place.command.application.service.ReservationCommandService;
@@ -32,6 +35,7 @@ public class MeetingCommandController {
     private final MeetingParticipationCommandService service;
     private final MeetingQueryService meetingQueryService;
     private final ReservationCommandService reservationCommandService;
+    private final MeetingRepository meetingRepository;
 
     @Operation(
             summary = "모임 생성",
@@ -71,7 +75,9 @@ public class MeetingCommandController {
             @PathVariable int meetingId, @PathVariable int memberId, @RequestBody ManageParticipationRequest manageParticipationRequest
     ) {
         // 1. 요청된 모임의 개설자가 맞는지 확인
-        MeetingDTO meeting = meetingQueryService.getMeeting(meetingId);
+        Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(
+                () -> new BusinessException(ErrorCode.MEETING_NOT_FOUND)
+        );
 
         if (meeting.getLeaderId() != manageParticipationRequest.getMemberId()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -97,7 +103,9 @@ public class MeetingCommandController {
             @PathVariable int meetingId, @PathVariable int memberId, @RequestBody ManageParticipationRequest manageParticipationRequest
     ) {
         // 1. 요청된 모임의 개설자가 맞는지 확인
-        MeetingDTO meeting = meetingQueryService.getMeeting(meetingId);
+        Meeting meeting = meetingRepository.findById(meetingId).orElseThrow(
+                () -> new BusinessException(ErrorCode.MEETING_NOT_FOUND)
+        );
 
         if (meeting.getLeaderId() != manageParticipationRequest.getMemberId()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();

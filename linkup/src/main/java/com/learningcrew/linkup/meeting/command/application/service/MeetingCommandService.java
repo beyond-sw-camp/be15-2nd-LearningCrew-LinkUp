@@ -6,18 +6,13 @@ import com.learningcrew.linkup.exception.ErrorCode;
 import com.learningcrew.linkup.meeting.command.application.dto.request.LeaderUpdateRequest;
 import com.learningcrew.linkup.meeting.command.application.dto.request.MeetingCreateRequest;
 import com.learningcrew.linkup.meeting.command.application.dto.request.MeetingParticipationCreateRequest;
-import com.learningcrew.linkup.meeting.command.application.dto.request.MeetingParticipationDeleteRequest;
 import com.learningcrew.linkup.meeting.command.domain.aggregate.Meeting;
 import com.learningcrew.linkup.meeting.command.domain.aggregate.MeetingParticipationHistory;
 import com.learningcrew.linkup.meeting.command.domain.repository.MeetingParticipationHistoryRepository;
 import com.learningcrew.linkup.meeting.command.domain.repository.MeetingRepository;
 import com.learningcrew.linkup.meeting.query.dto.response.MeetingDTO;
-import com.learningcrew.linkup.meeting.query.dto.response.MeetingParticipationDTO;
 import com.learningcrew.linkup.meeting.query.dto.response.MemberDTO;
 import com.learningcrew.linkup.meeting.query.mapper.MeetingMapper;
-import com.learningcrew.linkup.meeting.query.mapper.MeetingParticipationMapper;
-import com.learningcrew.linkup.meeting.query.service.MeetingParticipationQueryService;
-import com.learningcrew.linkup.meeting.query.service.StatusQueryService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -35,13 +30,9 @@ public class MeetingCommandService {
     private final MeetingRepository meetingRepository;
     private final MeetingParticipationHistoryRepository participationRepository;
     private final ModelMapper modelMapper;
-    private final MeetingMapper meetingMapper;
-    private final MeetingParticipationMapper participationMapper;
 
     private final MeetingParticipationCommandService commandService;
     private final MeetingParticipationCommandService participationCommandService;
-    private final MeetingParticipationQueryService participationQueryService;
-    private final StatusQueryService statusQueryService;
     private final SportTypeMapper sportTypeMapper;
 
     /* 모임 등록 */
@@ -89,7 +80,6 @@ public class MeetingCommandService {
         MeetingParticipationCreateRequest request
                 = MeetingParticipationCreateRequest.builder()
                 .memberId(leaderId)
-//                .participatedAt(createdAt)
                 .build();
 
         participationCommandService.createMeetingParticipation(request, savedMeeting);
