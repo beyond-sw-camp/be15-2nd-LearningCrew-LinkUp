@@ -1,6 +1,6 @@
 package com.learningcrew.linkup.community.command.domain.aggregate;
 
-import com.learningcrew.linkup.community.command.application.dto.PostCommentUpdateRequestDTO;
+import com.learningcrew.linkup.community.command.domain.constants.PostCommentIsDeleted;
 import com.learningcrew.linkup.linker.command.domain.aggregate.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "community_comment")
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -19,28 +18,27 @@ public class PostComment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "comment_id")
     private BigInteger postCommentId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id", referencedColumnName = "post_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "post_id")
     private Post post;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     private String postCommentContent;
 
-    @Column(name = "is_deleted", nullable = false, columnDefinition = "ENUM('Y', 'N') DEFAULT 'N'")
-    private String postCommentIsDeleted = "N";
+    @Enumerated(EnumType.STRING)
+    private PostCommentIsDeleted postCommentIsDeleted = PostCommentIsDeleted.N;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime postCommentCreatedAt;
 
-    @Column(name = "deleted_at")
     private LocalDateTime postCommentDeletedAt;
+
+    public PostComment(Post post, User user, String postCommentContent) {
+    }
 
     @PrePersist
     protected void onCreate() {
@@ -49,25 +47,16 @@ public class PostComment {
 
     @PreUpdate
     protected void onUpdate() {
-        if ("Y".equals(postCommentIsDeleted)) {
+        if (PostCommentIsDeleted.N.equals(postCommentIsDeleted)) {
             this.postCommentDeletedAt = LocalDateTime.now();
         }
     }
 
-    public void updatePostComment(PostCommentUpdateRequestDTO postCommentUpdateRequestDTO) {
-        if (postCommentUpdateRequestDTO.getCommentContent() == null || postCommentUpdateRequestDTO.getCommentContent().trim().isEmpty()) {
-            throw new IllegalArgumentException("Comment content cannot be empty");
-        }
-        this.postCommentContent = postCommentUpdateRequestDTO.getCommentContent();
+    public void setPostCommentIsDeleted(String postCommentIsDeleted) {
     }
 
-    public int getPostCommentUserId() {
-        return user.getUserId();
+    public void setPostCommentDeletedAt(LocalDateTime now) {
     }
-
-//    @OneToMany(mappedBy = "postComment", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)  // 댓글에 달린 좋아요
-//    private List<PostCommentLike> likes;  // 좋아요 목록
-
 
 
 }

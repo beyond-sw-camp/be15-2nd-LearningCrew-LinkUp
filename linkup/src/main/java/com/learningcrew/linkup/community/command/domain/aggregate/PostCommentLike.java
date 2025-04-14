@@ -15,28 +15,14 @@ public class PostCommentLike {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int postCommentLikeId;  // 좋아요 ID (자동 증가)
+    private int postCommentLikeId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("commentId")
-    @JoinColumn(name = "comment_id", referencedColumnName = "comment_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "comment_id")
     private PostComment postComment;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("userId")
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
-    private PostCommentLike(User user, PostComment postComment) {
-        this.user = user;
-        this.postComment = postComment;
-    }
-
-//    public static PostCommentLike create(User user, PostComment postComment) {
-//        return new PostCommentLike(user, postComment);
-//    }
 }
-
-
-
-

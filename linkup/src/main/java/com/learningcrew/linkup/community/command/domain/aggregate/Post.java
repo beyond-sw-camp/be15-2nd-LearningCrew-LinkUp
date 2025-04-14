@@ -1,16 +1,16 @@
 package com.learningcrew.linkup.community.command.domain.aggregate;
 
-//import com.learningcrew.linkup.common.Image;
+import com.learningcrew.linkup.community.command.domain.constants.PostIsDeleted;
+import com.learningcrew.linkup.community.command.domain.constants.PostIsNotice;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "community_post")
-@EntityListeners(AuditingEntityListener.class)  // Auditing 활성화 -> CreateDate, LastModifiedDate 작동
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -20,32 +20,38 @@ public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "post_id")
     private int postId;
 
-    @Column(name = "user_id", nullable = false)
     private int userId;
 
-    @Column(name = "title", nullable = false, length = 30)
-    private String postTitle;
+    private String title;
 
-    @Column(name = "content", nullable = false, columnDefinition = "TEXT")
-    private String postContent;
+    private String content;
 
-    @Column(name = "is_deleted", nullable = false, columnDefinition = "ENUM('Y','N') DEFAULT 'N'")
-    private String postIsDeleted = "N";
+    @Enumerated(EnumType.STRING)
+    @Column(name = "is_deleted")
+    private PostIsDeleted postIsDeleted = PostIsDeleted.N;
 
-    @Column(name = "is_notice", nullable = false, columnDefinition = "ENUM('Y','N') DEFAULT 'N'")
-    private String postIsNotice = "N";
+    @Enumerated(EnumType.STRING)
+    @Column(name = "is_notice")
+    private PostIsNotice postIsNotice = PostIsNotice.N;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at")
     private LocalDateTime postCreatedAt;
 
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at")
     private LocalDateTime postUpdatedAt;
 
     @Column(name = "deleted_at")
     private LocalDateTime postDeletedAt;
+
+    // 게시글과 댓글 관계 설정@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @OneToMany
+    private List<PostComment> postComments = new ArrayList<>();
+
+    // 게시글과 이미지 관계 설정 (게시글에 여러 이미지가 있을 수 있음)(mappedBy = "post", cascade = CascadeType.ALL)
+    @OneToMany
+    private List<PostImage> images = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {
@@ -58,19 +64,20 @@ public class Post {
         this.postUpdatedAt = LocalDateTime.now();
     }
 
-
-    public void updatePostDetails(int postId, int userId, String postTitle, String postContent) {
+    public void updatePostDetails(int postId, int userId, String title, String content) {
         this.postId = postId;
         this.userId = userId;
-        this.postTitle = postTitle;
-        this.postContent = postContent;
+        this.title = title;
+        this.content = content;
     }
 
 
-    // 게시글과 이미지를 연결하는 관계
-//    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    private List<Image> images;
 
+    public void updatePostDetails(String title, String content, boolean b) {
 
+    }
+
+    public void addImage(PostImage image) {
+    }
 }
 
