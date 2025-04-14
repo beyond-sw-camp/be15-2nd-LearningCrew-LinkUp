@@ -1,0 +1,64 @@
+package com.learningcrew.linkup.community.command.application.service;
+
+import com.learningcrew.linkup.community.command.application.dto.PostCommentCreateRequestDTO;
+import com.learningcrew.linkup.community.command.domain.aggregate.Post;
+import com.learningcrew.linkup.community.command.domain.aggregate.PostComment;
+import com.learningcrew.linkup.community.command.domain.constants.PostCommentIsDeleted;
+import com.learningcrew.linkup.community.command.domain.repository.PostCommentRepository;
+import com.learningcrew.linkup.community.command.domain.repository.PostRepository;
+import com.learningcrew.linkup.exception.BusinessException;
+import com.learningcrew.linkup.exception.ErrorCode;
+import com.learningcrew.linkup.linker.command.domain.aggregate.User;
+import com.learningcrew.linkup.linker.command.domain.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import java.math.BigInteger;
+import java.time.LocalDateTime;
+
+@Service
+@RequiredArgsConstructor
+public class PostCommentCommandService {
+
+    private final PostRepository postRepository;
+    private final UserRepository userRepository;
+    private final PostCommentRepository postCommentRepository;
+
+    /* 1. 댓글 등록 */
+    @Transactional
+    public PostComment createPostComment(PostCommentCreateRequestDTO postCommentCreateRequestDTO) {
+        // 1. 게시글 조회
+        Post post = postRepository.findById(postCommentCreateRequestDTO.getPostId())
+                .orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
+
+        // 2. 사용자 조회
+        User user = userRepository.findById(postCommentCreateRequestDTO.getUserId())
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+
+        // 3. 댓글 생성
+        PostComment postComment = PostComment.builder()
+                .post(post)
+                .user(user)
+                .postCommentContent(postCommentCreateRequestDTO.getCommentContent())
+                .postCommentIsDeleted(PostCommentIsDeleted.N)
+                .build();
+
+        // 4. 댓글 저장
+        return postCommentRepository.save(postComment);
+    }
+
+    /* 2. 댓글 삭제 (Soft Delete) */
+    @Transactional
+    public void deletePostComment(BigInteger postCommentId) {
+        // 1. 댓글 조회 (삭제되지 않은 댓글만)
+        PostComment postComment = postCommentRepository.findByPostCommentIdAndPostCommentIsDeleted(postCommentId, "N")
+                .orElseThrow(() -> new BusinessException(ErrorCode.COMMENT_NOT_FOUND));
+
+        // 2. 댓글 삭제 처리 (Soft delete로 처리)
+        postComment.setPostCommentIsDeleted("Y");
+        postComment.setPostCommentDeletedAt(LocalDateTime.now());
+
+        // 3. 댓글 업데이트
+        postCommentRepository.save(postComment);
+    }
+}
