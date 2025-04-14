@@ -85,6 +85,26 @@ public enum ErrorCode {
     REPORT_ALREADY_SUBMITTED(HttpStatus.BAD_REQUEST, "이미 신고한 사용자입니다."),
     REPORT_REASON_REQUIRED(HttpStatus.BAD_REQUEST, "신고 사유는 필수입니다."),
 
+    // 제재
+    PENALTY_NOT_FOUND(HttpStatus.NOT_FOUND, "제재 이력을 찾을 수 없습니다."),
+    PENALTY_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 제재된 콘텐츠입니다."),
+    PENALTY_SAVE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "제재 정보를 저장하는 데 실패했습니다."),
+    PENALTY_CANCEL_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "제재를 철회하는 데 실패했습니다."),
+    PENALTY_ALREADY_CONFIRMED(HttpStatus.BAD_REQUEST, "이미 확정된 제재입니다."),
+    PENALTY_ALREADY_CANCELED(HttpStatus.BAD_REQUEST, "이미 철회된 제재입니다."),
+
+    // 이의 제기
+    OBJECTION_NOT_FOUND(HttpStatus.NOT_FOUND, "이의 제기 내역을 찾을 수 없습니다."),
+    OBJECTION_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 이의 제기를 제출한 제재입니다."),
+    OBJECTION_ALREADY_PROCESSED(HttpStatus.BAD_REQUEST, "이미 처리된 이의 제기입니다."),
+    OBJECTION_REASON_REQUIRED(HttpStatus.BAD_REQUEST, "이의 제기 사유는 필수입니다."),
+    OBJECTION_UNAUTHORIZED(HttpStatus.FORBIDDEN, "이의 제기를 제출할 권한이 없습니다."),
+
+    // 블랙리스트
+    ALREADY_BLACKLISTED(HttpStatus.CONFLICT, "이미 블랙리스트에 등록된 사용자입니다."),
+    BLACKLIST_NOT_FOUND(HttpStatus.NOT_FOUND, "블랙리스트에 등록되지 않은 사용자입니다."),
+    CANNOT_BLACKLIST_ADMIN(HttpStatus.FORBIDDEN, "관리자는 블랙리스트에 등록할 수 없습니다."),
+
     // 알림
     NOTIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "알림을 찾을 수 없습니다."),
     NOTIFICATION_ALREADY_READ(HttpStatus.BAD_REQUEST, "이미 읽은 알림입니다."),
@@ -92,8 +112,13 @@ public enum ErrorCode {
     // 커뮤니티
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "게시글을 찾을 수 없습니다."),
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "댓글을 찾을 수 없습니다."),
+    LIKE_NOT_FOUND(HttpStatus.NOT_FOUND, "좋아요를 찾을 수 없습니다."),
     UNAUTHORIZED_POST_EDIT(HttpStatus.FORBIDDEN, "해당 게시글 수정 권한이 없습니다."),
     UNAUTHORIZED_COMMENT_DELETE(HttpStatus.FORBIDDEN, "해당 댓글 삭제 권한이 없습니다."),
+    TITLE_EMPTY(HttpStatus.BAD_REQUEST, "게시글 제목은 비워둘 수 없습니다."),
+    CONTENT_EMPTY(HttpStatus.BAD_REQUEST, "게시글 내용은 비워둘 수 없습니다."),
+    IMAGE_URLS_EMPTY(HttpStatus.BAD_REQUEST, "이미지 URL 목록은 비워둘 수 없습니다."),
+
 
     // 후기
     REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "후기를 찾을 수 없습니다."),
