@@ -1,33 +1,32 @@
 package com.learningcrew.linkup.community.query.mapper;
 
-
-import com.learningcrew.linkup.community.query.dto.request.PostRequest;
+import com.learningcrew.linkup.community.query.dto.request.CommunitySearchRequest;
 import com.learningcrew.linkup.community.query.dto.response.PostDTO;
 import com.learningcrew.linkup.community.query.dto.response.PostDetailResponse;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
 @Mapper
 public interface PostMapper {
-    // 게시글 목록 조회 (페이징 + 검색 조건)
-    List<PostDTO> selectAllPosts(PostRequest postRequest);
 
-    // 게시글 개수 조회
-    long countPosts(PostRequest postRequest);
+    // 게시글 전체 조회
+    List<PostDTO> selectAllPosts(CommunitySearchRequest request);
+
+    // 게시글 수 조회
+    long countAllPosts(CommunitySearchRequest request);
 
     // 게시글 상세 조회
-    PostDetailResponse selectPostDetail(@Param("postId") int postId);
+    PostDetailResponse selectPostDetail(int postId);
 
-    // 게시글 등록
-    int insertPost(PostRequest PostRequest);
+    // 게시글 이미지 URL 조회
+    List<String> selectPostImageUrlsByPostId(int postId);
 
-    // 게시글 수정
-    int updatePost(PostRequest PostRequest);
-
-    // 게시글 삭제 (soft delete)
-    int deletePost(@Param("postId") int postId);
+    // 특정 회원 게시글 조회
+    List<PostDTO> selectPostsByUser(@Param("userId") int userId,
+                                    @Param("offset") int offset,
+                                    @Param("limit") int limit);
+    // 특정 회원 게시글 수 조회
+    long countPostsByUser(int userId);
 }
-
-
