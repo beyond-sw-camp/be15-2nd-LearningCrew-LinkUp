@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "community_comment")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -25,17 +26,15 @@ public class PostComment {
     @JoinColumn(name = "post_id")
     private Post post;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    private int userId;
 
     @Column(name = "content")
     private String commentContent;
 
     @Setter
     @Column(name = "is_deleted")
-    @Enumerated(EnumType.STRING)
-    private PostCommentIsDeleted postCommentIsDeleted = PostCommentIsDeleted.N;
+    @Builder.Default
+    private String commentIsDeleted = "N";
 
     @Column(name = "created_at")
     private LocalDateTime postCommentCreatedAt;
@@ -44,9 +43,9 @@ public class PostComment {
     @Column(name = "deleted_at")
     private LocalDateTime postCommentDeletedAt;
 
-    public PostComment(Post post, User user, String commentContent) {
+    public PostComment(Post post, int userId, String commentContent) {
         this.post = post;
-        this.user = user;
+        this.userId = userId;
         this.commentContent = commentContent;
     }
 
@@ -57,13 +56,20 @@ public class PostComment {
 
     @PreUpdate
     protected void onUpdate() {
-        if (PostCommentIsDeleted.Y.equals(postCommentIsDeleted) && postCommentDeletedAt == null) {
+        if ("Y".equals(commentIsDeleted) && postCommentDeletedAt == null) {
             this.postCommentDeletedAt = LocalDateTime.now();
         }
     }
 
     public void softDelete() {
-        this.postCommentIsDeleted = PostCommentIsDeleted.Y;
+        this.commentIsDeleted = "Y";
+        this.postCommentDeletedAt = LocalDateTime.now();
     }
+
+    public void setIsDelete(String commentIsDeleted) {
+        this.commentIsDeleted = commentIsDeleted;
+    }
+
+
 
 }

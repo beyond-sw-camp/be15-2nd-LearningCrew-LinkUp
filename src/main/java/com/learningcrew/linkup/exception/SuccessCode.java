@@ -16,7 +16,6 @@ import org.springframework.http.HttpStatus;
         POST_UPDATE_SUCCESS(HttpStatus.OK, "게시글이 성공적으로 수정되었습니다."),
         POST_DELETE_SUCCESS(HttpStatus.NO_CONTENT, "게시글이 성공적으로 삭제되었습니다."),
         POST_COMMENT_CREATE_SUCCESS(HttpStatus.CREATED, "댓글이 성공적으로 등록되었습니다."),
-        POST_COMMENT_UPDATE_SUCCESS(HttpStatus.OK, "댓글이 성공적으로 수정되었습니다."),
         POST_COMMENT_DELETE_SUCCESS(HttpStatus.NO_CONTENT, "댓글이 성공적으로 삭제되었습니다."),
 
         /* 좋아요 등록 */

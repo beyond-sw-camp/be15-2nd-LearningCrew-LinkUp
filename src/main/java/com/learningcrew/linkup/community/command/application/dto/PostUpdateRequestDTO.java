@@ -35,9 +35,15 @@ public class PostUpdateRequestDTO {
 
     @JsonProperty("imageUrls")
     private List<String> imageUrls;
-    public PostUpdateRequestDTO(Integer userId, Integer postId, String title, String content, Object deleted, Object isNotice, Object imageUrls) {
+    public PostUpdateRequestDTO(Integer userId, Integer postId, String title, String content, String postIsDeleted, String postIsNotice, List<String> imageUrls) {
+        this.userId = userId;
+        this.postId = postId;
+        this.title = title;
+        this.content = content;
+        this.postIsDeleted = postIsDeleted;
+        this.postIsNotice = postIsNotice;
+        this.imageUrls = imageUrls;
     }
-
 
     private Integer postId;
 

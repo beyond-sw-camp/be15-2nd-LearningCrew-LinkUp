@@ -99,6 +99,7 @@
                     .orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
 
             post.updatePostDetails(
+                    postUpdateRequestDTO.getUserId(),
                     postUpdateRequestDTO.getTitle(),
                     postUpdateRequestDTO.getContent(),
                     postUpdateRequestDTO.postIsNotice()
@@ -125,19 +126,30 @@
         }
 
 
-
         /* 3. 게시글 삭제 */
-        @DeleteMapping("/{postId}")
-        @Operation(summary = "게시글 삭제", description = "게시글을 삭제합니다.")
-        public ResponseEntity<SuccessResponseMessage> deletePost(@PathVariable int postId) {
-            // 게시글 삭제 서비스 호출
-            postCommandService.deletePost(postId);
+        @PutMapping("/posts/{postId}/delete")
+    @Operation(summary = "게시글 삭제", description = "게시글을 삭제합니다.")
+    public ResponseEntity<ApiResponse<SuccessResponseMessage>> deletePost(
+            @PathVariable int postId,
+            @RequestParam int memberId) {
 
-            // 삭제 성공 메시지 응답
-            SuccessResponseMessage response = new SuccessResponseMessage(
-                    SuccessCode.POST_DELETE_SUCCESS
-            );
+        // 게시글 조회 (게시글의 작성자 정보 가져오기)
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
 
-            return ResponseEntity.ok(response);
+        int authorId = post.getUserId(); // 게시글 작성자 ID
+
+        // 작성자만 삭제할 수 있도록 처리
+        if (authorId != memberId) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build(); // 권한이 없으면 403 Forbidden 응답
         }
+
+        // 게시글 삭제 상태를 "Y"로 업데이트
+        post.setIsDelete("Y");
+        postRepository.save(post);  // 상태 변경을 데이터베이스에 저장
+
+        // 성공적인 응답 반환
+        SuccessResponseMessage response = new SuccessResponseMessage(SuccessCode.POST_DELETE_SUCCESS);
+        return ResponseEntity.ok(ApiResponse.success(response)); // ApiResponse를 통해 응답 반환
+    }
     }

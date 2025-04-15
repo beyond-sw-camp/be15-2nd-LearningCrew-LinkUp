@@ -59,7 +59,7 @@ public class PostCommandService {
                 .userId(userId)
                 .title(title)
                 .content(content)
-                .postIsDeleted(PostIsDeleted.valueOf(postIsDeleted))
+                .isDeleted(postIsDeleted)
                 .postIsNotice(PostIsNotice.valueOf(postIsNotice))
                 .build();
 
@@ -92,9 +92,10 @@ public class PostCommandService {
 
         // 2. 수정된 게시글 정보로 업데이트
         post.updatePostDetails(
-                String.valueOf(postUpdateRequestDTO.getUserId()),
+                postUpdateRequestDTO.getUserId(),
                 postUpdateRequestDTO.getTitle(),
-                postUpdateRequestDTO.getContent()
+                postUpdateRequestDTO.getContent(),
+                postUpdateRequestDTO.postIsNotice()
         );
 
         // 3. 게시글 업데이트
@@ -117,7 +118,7 @@ public class PostCommandService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
 
         // 2. 게시글 삭제 처리 (soft delete로 처리할 수도 있음)
-        post.setPostIsDeleted(PostIsDeleted.Y);  // soft delete (삭제된 게시글로 표시)
+        post.setIsDeleted(String.valueOf(PostIsDeleted.Y));  // soft delete (삭제된 게시글로 표시)
         postRepository.save(post);  // 변경사항 저장
     }
 }

@@ -31,7 +31,7 @@ public class PostCommentDomainService {
 
         String commentContent = postCommentCreateRequestDTO.getCommentContent();
 
-        PostComment postComment = new PostComment(post, user, commentContent);
+        PostComment postComment = new PostComment(post, user.getUserId(), commentContent);
 
         return postCommentRepository.save(postComment);
 

@@ -28,9 +28,8 @@ public class Post {
 
     private String content;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "is_deleted")
-    private PostIsDeleted postIsDeleted = PostIsDeleted.N;
+    private String isDeleted = "N";
 
     @Enumerated(EnumType.STRING)
     @Column(name = "is_notice")
@@ -45,12 +44,15 @@ public class Post {
     @Column(name = "deleted_at")
     private LocalDateTime postDeletedAt;
 
-    // 게시글과 댓글 관계 설정@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    @OneToMany
-    private List<PostComment> postComments = new ArrayList<>();
+    @OneToMany(mappedBy = "post")
+    private List<PostComment> postComments;
+
+//    // 게시글과 댓글 관계 설정@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+//    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+//    private List<PostComment> postComments = new ArrayList<>();
 
     // 게시글과 이미지 관계 설정 (게시글에 여러 이미지가 있을 수 있음)(mappedBy = "post", cascade = CascadeType.ALL)
-    @OneToMany
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<PostImage> images = new ArrayList<>();
 
     @PrePersist
@@ -61,26 +63,39 @@ public class Post {
 
     @PreUpdate
     protected void onUpdate() {
+
         this.postUpdatedAt = LocalDateTime.now();
     }
 
-    public void updatePostDetails(int postId, int userId, String title, String content) {
-        this.postId = postId;
-        this.userId = userId;
+
+    public void updatePostDetails(Integer userId, String title, String content, String isNotice) {
+        this.userId = userId;  // 혹시 다른 타입 변환이 필요할 수 있습니다.
         this.title = title;
         this.content = content;
-    }
-
-
-
-    public void updatePostDetails(String title, String content, String b) {
-
+        this.postIsNotice = PostIsNotice.valueOf(isNotice);
     }
 
     public void addImage(PostImage image) {
+        if (image != null) {
+            this.images.add(image);
+            image.setPost(this);
+        }
     }
 
     public void setMainImageUrl(String mainImageFilename) {
+        for (PostImage image : images) {
+            if (image.getFilename().equals(mainImageFilename)) {
+                image.setMain(true);  // 주 이미지 설정 (PostImage 클래스에 `setMain` 메서드가 필요)
+                break;
+            }
+        }
     }
+
+    public void setIsDelete(String isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
+
+
 }
 

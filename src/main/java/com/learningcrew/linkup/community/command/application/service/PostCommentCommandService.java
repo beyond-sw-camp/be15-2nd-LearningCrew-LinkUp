@@ -29,6 +29,7 @@ public class PostCommentCommandService {
     public PostComment createPostComment(PostCommentCreateRequestDTO postCommentCreateRequestDTO) {
         // 1. 게시글 조회
         Post post = postRepository.findById(postCommentCreateRequestDTO.getPostId())
+                .filter(p -> !"Y".equals(p.getIsDeleted())) // 소프트 삭제된 게시글은 필터링
                 .orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
 
         // 2. 사용자 조회
@@ -38,9 +39,8 @@ public class PostCommentCommandService {
         // 3. 댓글 생성
         PostComment postComment = PostComment.builder()
                 .post(post)
-                .user(user)
+                .userId(user.getUserId())
                 .commentContent(postCommentCreateRequestDTO.getCommentContent())
-                .postCommentIsDeleted(PostCommentIsDeleted.N)
                 .build();
 
         // 4. 댓글 저장
@@ -50,10 +50,10 @@ public class PostCommentCommandService {
     /* 2. 댓글 삭제 (Soft Delete) */
     @Transactional
     public void deletePostComment(BigInteger postCommentId) {
-        PostComment postComment
-                = postCommentRepository.findByPostCommentIdAndPostCommentIsDeleted(
-                        postCommentId, String.valueOf(PostCommentIsDeleted.N))
+        PostComment postComment = postCommentRepository.findByPostCommentIdAndCommentIsDeleted(
+                        postCommentId, "N")
                 .orElseThrow(() -> new BusinessException(ErrorCode.COMMENT_NOT_FOUND));
+
 
         // 2. 소프트 삭제 처리
         postComment.softDelete();

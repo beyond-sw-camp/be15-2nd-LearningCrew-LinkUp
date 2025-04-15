@@ -11,11 +11,11 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
 
     Optional<Post> findByPostId(Integer postId);
 
-    Optional<Post> findByPostIdAndPostIsDeleted(Integer postId, String IsDeleted);
+    Optional<Post> findByIsDeleted(String IsDeleted);
+
+    Optional<Post> findByPostIdAndIsDeleted(Integer postId, String IsDeleted);
 
 
-//    Optional<Post> findByPostIdAndPostIsDeleted(int postId, String postIsDeleted);
-//
-//    void deleteByPostId(Integer postId);
+
 
 }
