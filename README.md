@@ -822,7 +822,7 @@ LinkUp은 모임이라는 소속에 구애받지 않고 언제든 원할 때 신
 
 🔗 [테스트 케이스 정의서 링크](# )
 
-<img src="assets/images/test_case_definition.png" alt="test_case_definition"/>
+<img src="assets/images/test_case_definition.jpg" alt="test_case_definition"/>
 
 <br>
 
