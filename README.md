@@ -851,29 +851,73 @@ LinkUp은 모임이라는 소속에 구애받지 않고 언제든 원할 때 신
 <details>
 <summary>📅 모임</summary>
 - 모임 개설
-<img src="assets/test_cases/meeting/create_meeting_TEST-052.png" alt="create_meeting_TEST-052"/>
+
+<img src="assets/test_cases/meeting/create_meeting_TEST-052.PNG" alt="create_meeting_TEST-052"/>
+
+<br>
+
 - 참가 승인
-<img src="assets/test_cases/meeting/accept_participation_TEST-054.png" alt="accept_participation_TEST-054"/>
+
+<img src="assets/test_cases/meeting/accept_participation_TEST-054.PNG" alt="accept_participation_TEST-054"/>
+
+<br>
+
 - 참가 거절
-<img src="assets/test_cases/meeting/reject_participation_TEST-055.png" alt="reject_participation_TEST-055"/>
+
+<img src="assets/test_cases/meeting/reject_participation_TEST-055.PNG" alt="reject_participation_TEST-055"/>
+
+<br>
+
 - 개설자 참가 취소
-<img src="assets/test_cases/meeting/leader_update_TEST-056.png" alt="leader_update_TEST-056"/>
+
+<img src="assets/test_cases/meeting/leader_update_TEST-056.PNG" alt="leader_update_TEST-056"/>
+
+<br>
+
 - 모임 취소
-<img src="assets/test_cases/meeting/cancel_meeting_TEST-057.png" alt="cancel_meeting_TEST-057"/>
+
+<img src="assets/test_cases/meeting/cancel_meeting_TEST-057.PNG" alt="cancel_meeting_TEST-057"/>
+
+<br>
+
 - 참가 신청 성공
-<img src="assets/test_cases/meeting/apply_participation_success_TEST-059.png" alt="apply_participation_success_TEST-059"/>
+
+<img src="assets/test_cases/meeting/apply_participation_success_TEST-059.PNG" alt="apply_participation_success_TEST-059"/>
+
+<br>
+
 - 참가 신청 실패 <!-- 이건 필요 없으면 생략 가능 -->
-<img src="assets/test_cases/meeting/apply_participation_fail_TEST-059.png" alt="apply_participation_fail_TEST-059"/>
+
+<img src="assets/test_cases/meeting/apply_participation_fail_TEST-059.PNG" alt="apply_participation_fail_TEST-059"/>
+
+<br>
+
 - 모임 참가 취소
-<img src="assets/test_cases/meeting/cancle_participation_TEST-060.png" alt="cancle_participation_TEST-060"/>
+<img src="assets/test_cases/meeting/cancle_participation_TEST-060.PNG" alt="cancle_participation_TEST-060"/>
+
+<br>
+
 - 모임 찜 등록
-<img src="assets/test_cases/meeting/create_interested_meeting_TEST-062.png" alt=create_interested_meeting_TEST-062"/>
+
+<img src="assets/test_cases/meeting/create_interested_meeting_TEST-062.PNG" alt="create_interested_meeting_TEST-062"/>
+
+<br>
+
 - 모임 찜 취소
-<img src="assets/test_cases/meeting/delete_interested_meeting_TEST-063.png" alt="delete_interested_meeting_TEST-063"/>
+
+<img src="assets/test_cases/meeting/delete_interested_meeting_TEST-063.PNG" alt="delete_interested_meeting_TEST-063"/>
+
+<br>
+
 - 참가자 평가 작성 성공
-<img src="assets/test_cases/meeting/participant_review_success_TEST-067.png" alt="participant_review_success_TEST-067"/>
+
+<img src="assets/test_cases/meeting/participant_review_success_TEST-067.PNG" alt="participant_review_success_TEST-067"/>
+
+<br>
+
 - 참가자 평가 작성 실패
-<img src="assets/test_cases/meeting/participant_review_fail_TEST-067.png" alt="participant_review_fail_TEST-067"/>
+
+<img src="assets/test_cases/meeting/participant_review_fail_TEST-067.PNG" alt="participant_review_fail_TEST-067"/>
 </details>
 
 <br>
